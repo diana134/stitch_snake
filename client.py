@@ -1,20 +1,22 @@
 import requests, configparser
 
-config = configparser.ConfigParser()
-config.read('config.ini')
+class RavelryClient:
+    def __init__(self) -> None:
+        self.baseUrl = 'https://api.ravelry.com'
 
-# set up authentication credentials
-username = config.get('ravelry', 'authUsername')
-password = config.get('ravelry', 'authPassword')
+        config = configparser.ConfigParser()
+        config.read('config.ini')
 
-# create a requests session object
-session = requests.Session()
+        # set up authentication credentials
+        username = config.get('ravelry', 'authUsername')
+        password = config.get('ravelry', 'authPassword')
 
-# attach the credentials to the session object
-session.auth = (username, password)
+        # create a requests session object
+        self.session = requests.Session()
 
-# make the request
-response = session.get('https://api.ravelry.com/patterns/search.json')
+        # attach the credentials to the session object
+        self.session.auth = (username, password)
 
-# print the response
-print(response.text)
+    def getResource(self, path):
+        response =  self.session.get(self.baseUrl + path)
+        return response.json()
